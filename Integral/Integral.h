@@ -12,7 +12,7 @@
 
 #define PAGE_SIZE 4096
 #define NON_DATA_SIZE sizeof (double) * 2 + sizeof (int)
-const int RANGE = 151200;
+const int RANGE = 15120;
 const double DELTA = 0.002;
 
 typedef struct _Thread_info {

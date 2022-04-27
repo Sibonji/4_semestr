@@ -8,7 +8,7 @@ all: $(OBJ)
 	$(CC) $(OBJ) -o integral -lm
 
 $(OBJ): $(SRC)
-	$(CC) -c $(SRC)
+	$(CC) -MMD -MP -c $(SRC)
 
 clear:
-	rm -rf integral
+	rm -rf integral *.o *.d

@@ -139,7 +139,7 @@ double count_int (Thread_info* thread_info) {
 }
 
 double count_func (double x) {
-    return (sin(x));
+    return (sin (x) * sin(x) + cos(x) * cos(x));
 }
 
 int main (int argc, char* argv[]) {
@@ -174,7 +174,7 @@ int main (int argc, char* argv[]) {
         return -bad_join;
     }
 
-    printf ("Res is: %f!\n", res);
+    //printf ("Res is: %f!\n", res);
     
 
     free (threads);
