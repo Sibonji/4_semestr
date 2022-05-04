@@ -10,3 +10,6 @@ all: $(TESTS_OBJ)
 
 $(TESTS_OBJ): $(TESTS_SRC)
 	$(CC) -c $(TESTS_SRC)
+
+clean:
+	rm -rf *.o Tests
