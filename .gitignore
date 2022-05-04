@@ -1,3 +1,7 @@
 */*.o
 */*.d
 */integral
+*/Hash_table
+*/Test_hash_table
+*/*/*.o
+*/*/Tests
