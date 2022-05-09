@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -o1
+CFLAGS = -DTEST -MMD -MP
 
 SRC = Hash_table.c
 OBJ = Hash_table.o
@@ -9,17 +9,22 @@ TEST_SRC = Test_hash_table.c
 TEST_OBJ = Test_hash_table.o
 TEST_RES = Test_hash_table
 
-all: $(OBJ)
-	$(CC) $(OBJ) -o $(RES)
+COVFILE = Hash_cover
+COVDIR = report
+
+test: $(TEST_OBJ) $(OBJ)
+	$(CC) $(TEST_OBJ) $(OBJ) -lgcov -o $(TEST_RES)
+
+$(TEST_OBJ): $(TEST_SRC)
+	$(CC) $(CFLAGS) -c $(TEST_SRC)
 
 $(OBJ): $(SRC)
-	$(CC) -c $(SRC)
+	$(CC) $(CFLAGS) --coverage -c $(SRC)
 
-test: $(TEST_OBJ)
-	$(CC) $(TEST_OBJ) -o $(TEST_RES)
-
-$(TEST_OBJ):
-	$(CC) -c $(TEST_SRC)
+code_cov:
+	./$(TEST_RES)
+	lcov -t $(COVFILE) -o $(COVFILE).info -c -d .
+	genhtml -o $(COVDIR) $(COVFILE).info
 
 clean:
-	rm -rf *.txt *.o Hash_table
+	rm -rf *.o Hash_table Test_hash_table *.info *.gcno *.gcda *.d report *.txt Test/*.o
