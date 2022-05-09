@@ -1,7 +1,10 @@
 */*.o
 */*.d
 */integral
-*/Hash_table
 */Test_hash_table
 */*/*.o
+*/report
+*/*.gcno
+*/*.gcda
+*/*.info
 */*/Tests
