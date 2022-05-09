@@ -26,5 +26,8 @@ code_cov:
 	lcov -t $(COVFILE) -o $(COVFILE).info -c -d .
 	genhtml -o $(COVDIR) $(COVFILE).info
 
+mem_test:
+	valgrind --leak-check=full -s ./$(TEST_RES)
+
 clean:
 	rm -rf *.o Hash_table Test_hash_table *.info *.gcno *.gcda *.d report *.txt Test/*.o
