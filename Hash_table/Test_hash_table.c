@@ -57,25 +57,35 @@ int add_to_test_table (Test_table* test_table, char* word){
     if (test_table == NULL) return -zero_pointer;
 
     if (test_table -> cur_size == test_table -> max_size) {
-        test_table -> max_size *= 1,5;
+        test_table -> max_size = test_table -> max_size * 2;
         test_table -> arr = (Test_elem*) realloc (test_table -> arr, sizeof (Test_elem) * test_table -> max_size);
         if (test_table -> arr == NULL) return -bad_alloc;
+
+        for (int i = test_table -> cur_size; i < test_table -> max_size; i++) {
+            test_table -> arr[i].valid = not_valid;
+            test_table -> arr[i].login = NULL;
+        }
     }
 
-    (test_table -> cur_size)++;
-
     for (int i = 0; i < test_table -> max_size; i++) {
-        if (test_table -> arr[i].valid != valid) {
+        if (test_table -> arr[i].valid == valid) {
+            if (strcmp (test_table -> arr[i].login, word) == 0) {
+                return -elem_exist;
+            }
+        }
+        else if (test_table -> arr[i].valid != valid) {
+
             test_table -> arr[i].login = (char*) calloc (strlen (word) + 1, sizeof (char));
             if (test_table -> arr[i].login == NULL) return -bad_alloc;
 
             test_table -> arr[i].valid = valid;
             memcpy (test_table -> arr[i].login, word, strlen (word));
             (test_table -> cur_size)++;
+            return success;
         }
     }
 
-    return success;
+    return -undef_cmd_name;
 }
 
 int find_in_test_table (Test_table* test_table, char* word) {
@@ -127,7 +137,7 @@ int check_elem (FILE* tests, Test_table* test_table, Hash_table* hash_table) {
 
     char* word = (char*) calloc (MAX_CMD_SIZE, sizeof (char));
     fscanf (tests, "%s\n", word);
-
+    
     int test_err_num = 0;
     int hash_err_num = 0;
 
