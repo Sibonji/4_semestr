@@ -213,6 +213,11 @@ int file_tests () {
     }
     else printf ("--------------------File tests passed successfully!----------------------\n\n");
 
+    printf      ("-------------------------Check foreach func!-----------------------------\n\n");
+    foreach (&hash_table, &print_elem, NULL);
+    foreach (&hash_table, &cmp_elem, "la");
+    printf      ("--------------------Check tests passed succesfully!----------------------\n\n");
+
     free_mem (&test_table, &hash_table, tests);
 
     printf      ("-------------------------Starting error tests!---------------------------\n");
@@ -225,6 +230,16 @@ int file_tests () {
     
 
     return success;
+}
+
+void cmp_elem (Data_set* elem, void* word) {
+    if (elem -> word != NULL && word != NULL) {
+        if (strcmp (elem -> word, (char*) word) == 0) {
+            printf ("\n\nWord found!\nWord is: %s, elem->word is: %s!\n\n", elem->word, (char*) word);
+        }
+    }
+
+    return;
 }
 
 void free_mem (Test_table* test_table, Hash_table* hash_table, FILE* tests) {
