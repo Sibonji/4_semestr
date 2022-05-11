@@ -10,8 +10,8 @@ long int count_hash (char* login) {
     }
 
     for (int i = 0; i < strlen (login); i++) {
-        hash_num += (long int)(login[i]) * pow;
-        pow *= 2;
+        hash_num = hash_num + (long int)(login[i]) * pow;
+        pow = pow * 2;
     }
         
     return hash_num;
@@ -80,6 +80,8 @@ int add_elem (Hash_table* table, char* login) {
     
     long int _hash_num = count_hash (login);
     if (_hash_num < 0) return _hash_num; //_hash_num will define error number; tests done
+
+    //printf ("%s %ld %ld\n", login, _hash_num, count_hash (login));
     
     int cell_num = _hash_num % table -> size;
 
@@ -90,11 +92,13 @@ int add_elem (Hash_table* table, char* login) {
 }
 
 int find_empty (Data_set* elem, long int _hash_num, char* login) {
-    if (elem -> hash_num == poison) {
+    if (elem -> word == NULL) {
         elem -> word = (char*) calloc (strlen (login) + 1, sizeof (char));
         memcpy (elem -> word, login, sizeof (char) * strlen (login));
 
         elem -> hash_num = _hash_num;
+
+        return success;
     }
     else if ((elem -> hash_num == _hash_num) && (strcmp (elem -> word, login) == 0)) {
         return -elem_exist; //tests done
@@ -126,7 +130,7 @@ int get_elem (Hash_table* table, char* login) {
 
 int find_elem (Data_set* elem, long int _hash_num, char* login) {
     if (elem -> hash_num != poison) {
-        if ((elem -> hash_num = _hash_num) && (strcmp (elem -> word, login) == 0)) {
+        if ((elem -> hash_num == _hash_num) && (strcmp (elem -> word, login) == 0)) {
             return found; //tests done
         }
     }
@@ -160,12 +164,8 @@ int rm_elem (Hash_table* table, char* login) {
 }
 
 void* rec_rm (Data_set* elem, long int _hash_num, char* login, int* status) {
-    /*if (elem -> word == NULL && elem -> ) {
-        *status = -not_exist; //tests done
-        return NULL;
-    }*/
     if (elem -> hash_num != poison) {
-        if (elem -> hash_num = _hash_num && strcmp (elem -> word, login) == 0) {
+        if (elem -> hash_num == _hash_num && strcmp (elem -> word, login) == 0) {
             free (elem -> word);
             elem -> word = NULL;
             *status = found; //tests done

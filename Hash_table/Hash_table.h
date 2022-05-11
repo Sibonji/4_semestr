@@ -13,7 +13,7 @@
 
 typedef struct _Data_set {
     char* word;
-    unsigned long int hash_num;
+    long int hash_num;
     struct _Data_set* next_elem;
 }Data_set;
 
