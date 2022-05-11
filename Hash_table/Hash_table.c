@@ -246,3 +246,30 @@ int print_error (int err_num) {
 
     return err_num;
 }
+
+
+void foreach (Hash_table* table, void (*func) (Data_set* elem, void* ), void* data) {
+    Data_set* save_elem = NULL;
+
+    for (int i = 0; i < table -> size; i++) {
+        save_elem = &(table -> elem[i]);
+
+        while (save_elem != NULL) {
+            func (save_elem, data);
+            save_elem = save_elem -> next_elem;
+        }
+    }
+}
+
+void print_elem (Data_set* elem, void* log_file) {
+    if (log_file == NULL)
+        log_file = stdout;
+
+    fprintf (log_file, "This elem has adr: %p, next_elem has adr: %p\n", elem, elem -> next_elem);
+    if (elem -> word != NULL)
+        fprintf (log_file, "Word: %s, ", elem -> word);
+    else
+        fprintf (log_file, "Word is not exist, ");
+
+    fprintf (log_file, "Hash_num: %ld\n", elem -> hash_num);
+}

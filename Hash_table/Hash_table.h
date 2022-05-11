@@ -40,4 +40,7 @@ void* rec_rm (Data_set* elem, long int _hash_num, char* login, int* status);
 
 int check_table (Hash_table* table, char* login);
 
+void foreach (Hash_table* table, void (*func) (Data_set* elem, void* ), void* data);
+void print_elem (Data_set* elem, void* log_file);
+
 #endif
