@@ -74,11 +74,6 @@ int add_to_test_table (Test_table* test_table, char* word){
             }
         }
         else if (test_table -> arr[i].valid != valid) {
-<<<<<<< HEAD
-
-=======
-            
->>>>>>> 18eff5f6dc5f7c596d4d017419ba92417ac1ff3d
             test_table -> arr[i].login = (char*) calloc (strlen (word) + 1, sizeof (char));
             if (test_table -> arr[i].login == NULL) return -bad_alloc;
 
