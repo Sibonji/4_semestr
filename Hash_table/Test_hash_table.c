@@ -65,13 +65,20 @@ int add_to_test_table (Test_table* test_table, char* word){
     (test_table -> cur_size)++;
 
     for (int i = 0; i < test_table -> max_size; i++) {
-        if (test_table -> arr[i].valid != valid) {
+        if (test_table -> arr[i].valid == valid) {
+            if (strcmp (test_table -> arr[i].login, word) == 0) {
+                return -elem_exist;
+            }
+        }
+        else if (test_table -> arr[i].valid != valid) {
+            
             test_table -> arr[i].login = (char*) calloc (strlen (word) + 1, sizeof (char));
             if (test_table -> arr[i].login == NULL) return -bad_alloc;
 
             test_table -> arr[i].valid = valid;
             memcpy (test_table -> arr[i].login, word, strlen (word));
             (test_table -> cur_size)++;
+            return success;
         }
     }
 
