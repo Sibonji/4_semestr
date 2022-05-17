@@ -10,20 +10,24 @@ long int count_hash (char* login) {
     }
 
     for (int i = 0; i < strlen (login); i++) {
-        hash_num += (long int)(login[i]) * pow;
-        pow *= 2;
+        hash_num = hash_num + (long int)(login[i]) * pow;
+        pow = pow * 2;
     }
         
     return hash_num;
 }
 
 int delete_table (Hash_table* table) {
-    if (table == NULL) return -zero_pointer; //tests done
-    if (table -> elem == NULL) return -zero_pointer; //tests done
+    if (table == NULL) 
+        return -zero_pointer; //tests done
+    if (table -> elem == NULL)
+        return -zero_pointer; //tests done
 
     for (int i = 0; i < table -> size; i++) {
-        if (table -> elem[i].next_elem != NULL) rec_free (table -> elem[i].next_elem);
-        if (table -> elem[i].hash_num != poison) free (table -> elem[i].word);
+        if (table -> elem[i].next_elem != NULL) 
+            rec_free (table -> elem[i].next_elem);
+        if (table -> elem[i].hash_num != poison) 
+            free (table -> elem[i].word);
     }
     
     free (table -> elem);
@@ -32,7 +36,8 @@ int delete_table (Hash_table* table) {
 }
 
 void rec_free (Data_set* elem) {
-    if (elem -> next_elem != NULL) rec_free (elem -> next_elem);
+    if (elem -> next_elem != NULL)
+        rec_free (elem -> next_elem);
     if (elem != NULL) {
         free (elem -> word);
         free (elem);
@@ -42,13 +47,16 @@ void rec_free (Data_set* elem) {
 }
 
 int create_table (Hash_table* table, int _size) {
-    if (_size <= 0) return -bad_size; //tests done
-    if (table == NULL) return -zero_pointer; //tests done
+    if (_size <= 0)
+        return -bad_size; //tests done
+    if (table == NULL)
+        return -zero_pointer; //tests done
 
     table -> size = _size;
 
     table -> elem = (Data_set *) calloc (_size, sizeof (Data_set));
-    if (table -> elem == NULL) return -bad_alloc; //Unable to do test for this!
+    if (table -> elem == NULL)
+        return -bad_alloc; //Unable to do test for this!
     
     for (int i = 0; i < _size; i++) {
         elem_initialize (&table -> elem[i]);
@@ -66,42 +74,52 @@ void elem_initialize (Data_set* _elem) {
 }
 
 int check_table (Hash_table* table, char* login) {
-    if (table == NULL) return -zero_pointer; //tests done
-    else if (login == NULL) return -zero_pointer; //tests done
-    else if (table -> size <= 0) return -bad_size; //tests done
-    else if (table -> elem == NULL) return -zero_pointer; //tests done
+    if (table == NULL)
+        return -zero_pointer; //tests done
+    else if (login == NULL)
+        return -zero_pointer; //tests done
+    else if (table -> size <= 0)
+        return -bad_size; //tests done
+    else if (table -> elem == NULL)
+        return -zero_pointer; //tests done
 
     return success;
 }
 
 int add_elem (Hash_table* table, char* login) {
     int err = 0;
-    if ((err = check_table (table, login)) != success) return err; //tests_done
+    if ((err = check_table (table, login)) != success)
+        return err; //tests_done
     
     long int _hash_num = count_hash (login);
-    if (_hash_num < 0) return _hash_num; //_hash_num will define error number; tests done
-    
+    if (_hash_num < 0)
+        return _hash_num; //_hash_num will define error number; tests done
+
     int cell_num = _hash_num % table -> size;
 
     err = find_empty (&table -> elem[cell_num], _hash_num, login);
-    if (err != success) return err;
+    if (err != success)
+        return err;
 
     return success;
 }
 
 int find_empty (Data_set* elem, long int _hash_num, char* login) {
-    if (elem -> hash_num == poison) {
+    if (elem -> word == NULL) {
         elem -> word = (char*) calloc (strlen (login) + 1, sizeof (char));
         memcpy (elem -> word, login, sizeof (char) * strlen (login));
 
         elem -> hash_num = _hash_num;
+
+        return success;
     }
     else if ((elem -> hash_num == _hash_num) && (strcmp (elem -> word, login) == 0)) {
         return -elem_exist; //tests done
     }
     else if (elem -> next_elem == NULL) {
         elem -> next_elem = (Data_set*) calloc (1, sizeof (Data_set));
-        if (elem -> next_elem == NULL) return -bad_alloc; //unable to do tests
+        if (elem -> next_elem == NULL)
+            return -bad_alloc; //unable to do tests
 
         elem_initialize (elem -> next_elem);
         find_empty (elem -> next_elem, _hash_num, login);
@@ -114,10 +132,12 @@ int find_empty (Data_set* elem, long int _hash_num, char* login) {
 
 int get_elem (Hash_table* table, char* login) {
     int err = 0;
-    if ((err = check_table (table, login)) != success) return err;
+    if ((err = check_table (table, login)) != success)
+        return err;
 
     long int _hash_num = count_hash (login);
-    if (_hash_num == -zero_login) return _hash_num; //_hash_num will define error number; tests done
+    if (_hash_num == -zero_login)
+        return _hash_num; //_hash_num will define error number; tests done
     
     int cell_num = _hash_num % table -> size;
     
@@ -126,7 +146,7 @@ int get_elem (Hash_table* table, char* login) {
 
 int find_elem (Data_set* elem, long int _hash_num, char* login) {
     if (elem -> hash_num != poison) {
-        if ((elem -> hash_num = _hash_num) && (strcmp (elem -> word, login) == 0)) {
+        if ((elem -> hash_num == _hash_num) && (strcmp (elem -> word, login) == 0)) {
             return found; //tests done
         }
     }
@@ -139,10 +159,12 @@ int find_elem (Data_set* elem, long int _hash_num, char* login) {
 
 int rm_elem (Hash_table* table, char* login) {
     int err = 0;
-    if ((err = check_table (table, login)) != success) return err; //tests done
+    if ((err = check_table (table, login)) != success)
+        return err; //tests done
 
     long int _hash_num = count_hash (login);
-    if (_hash_num < 0) return _hash_num; //_hash_num will define error number; tests done
+    if (_hash_num < 0)
+        return _hash_num; //_hash_num will define error number; tests done
     
     int cell_num = _hash_num % table -> size;
     
@@ -160,12 +182,8 @@ int rm_elem (Hash_table* table, char* login) {
 }
 
 void* rec_rm (Data_set* elem, long int _hash_num, char* login, int* status) {
-    /*if (elem -> word == NULL && elem -> ) {
-        *status = -not_exist; //tests done
-        return NULL;
-    }*/
     if (elem -> hash_num != poison) {
-        if (elem -> hash_num = _hash_num && strcmp (elem -> word, login) == 0) {
+        if (elem -> hash_num == _hash_num && strcmp (elem -> word, login) == 0) {
             free (elem -> word);
             elem -> word = NULL;
             *status = found; //tests done
@@ -184,12 +202,14 @@ void* rec_rm (Data_set* elem, long int _hash_num, char* login, int* status) {
             *status = success;
             return NULL;
         }
-        else return NULL;
+        else
+            return NULL;
     }
 }
 
 int print_error (int err_num) {
-    if (err_num == success || err_num == found) return err_num;
+    if (err_num == success || err_num == found)
+        return err_num;
 
     fprintf (stderr, "Error occured during programm execution!\n");
 
@@ -225,4 +245,31 @@ int print_error (int err_num) {
     }
 
     return err_num;
+}
+
+
+void foreach (Hash_table* table, void (*func) (Data_set* elem, void* ), void* data) {
+    Data_set* save_elem = NULL;
+
+    for (int i = 0; i < table -> size; i++) {
+        save_elem = &(table -> elem[i]);
+
+        while (save_elem != NULL) {
+            func (save_elem, data);
+            save_elem = save_elem -> next_elem;
+        }
+    }
+}
+
+void print_elem (Data_set* elem, void* log_file) {
+    if (log_file == NULL)
+        log_file = stdout;
+
+    fprintf (log_file, "This elem has adr: %p, next_elem has adr: %p\n", elem, elem -> next_elem);
+    if (elem -> word != NULL)
+        fprintf (log_file, "Word: %s, ", elem -> word);
+    else
+        fprintf (log_file, "Word is not exist, ");
+
+    fprintf (log_file, "Hash_num: %ld\n", elem -> hash_num);
 }

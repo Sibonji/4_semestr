@@ -57,12 +57,15 @@ int add_to_test_table (Test_table* test_table, char* word){
     if (test_table == NULL) return -zero_pointer;
 
     if (test_table -> cur_size == test_table -> max_size) {
-        test_table -> max_size *= 1,5;
+        test_table -> max_size = test_table -> max_size * 2;
         test_table -> arr = (Test_elem*) realloc (test_table -> arr, sizeof (Test_elem) * test_table -> max_size);
         if (test_table -> arr == NULL) return -bad_alloc;
-    }
 
-    (test_table -> cur_size)++;
+        for (int i = test_table -> cur_size; i < test_table -> max_size; i++) {
+            test_table -> arr[i].valid = not_valid;
+            test_table -> arr[i].login = NULL;
+        }
+    }
 
     for (int i = 0; i < test_table -> max_size; i++) {
         if (test_table -> arr[i].valid == valid) {
@@ -71,7 +74,6 @@ int add_to_test_table (Test_table* test_table, char* word){
             }
         }
         else if (test_table -> arr[i].valid != valid) {
-            
             test_table -> arr[i].login = (char*) calloc (strlen (word) + 1, sizeof (char));
             if (test_table -> arr[i].login == NULL) return -bad_alloc;
 
@@ -82,7 +84,7 @@ int add_to_test_table (Test_table* test_table, char* word){
         }
     }
 
-    return success;
+    return -undef_cmd_name;
 }
 
 int find_in_test_table (Test_table* test_table, char* word) {
@@ -134,7 +136,7 @@ int check_elem (FILE* tests, Test_table* test_table, Hash_table* hash_table) {
 
     char* word = (char*) calloc (MAX_CMD_SIZE, sizeof (char));
     fscanf (tests, "%s\n", word);
-
+    
     int test_err_num = 0;
     int hash_err_num = 0;
 
@@ -211,6 +213,11 @@ int file_tests () {
     }
     else printf ("--------------------File tests passed successfully!----------------------\n\n");
 
+    printf      ("-------------------------Check foreach func!-----------------------------\n\n");
+    foreach (&hash_table, &print_elem, NULL);
+    foreach (&hash_table, &cmp_elem, "la");
+    printf      ("--------------------Check tests passed succesfully!----------------------\n\n");
+
     free_mem (&test_table, &hash_table, tests);
 
     printf      ("-------------------------Starting error tests!---------------------------\n");
@@ -223,6 +230,16 @@ int file_tests () {
     
 
     return success;
+}
+
+void cmp_elem (Data_set* elem, void* word) {
+    if (elem -> word != NULL && word != NULL) {
+        if (strcmp (elem -> word, (char*) word) == 0) {
+            printf ("\n\nWord found!\nWord is: %s, elem->word is: %s!\n\n", elem->word, (char*) word);
+        }
+    }
+
+    return;
 }
 
 void free_mem (Test_table* test_table, Hash_table* hash_table, FILE* tests) {

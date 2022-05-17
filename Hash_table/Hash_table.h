@@ -13,7 +13,7 @@
 
 typedef struct _Data_set {
     char* word;
-    unsigned long int hash_num;
+    long int hash_num;
     struct _Data_set* next_elem;
 }Data_set;
 
@@ -39,5 +39,8 @@ int rm_elem (Hash_table* table, char* login);
 void* rec_rm (Data_set* elem, long int _hash_num, char* login, int* status);
 
 int check_table (Hash_table* table, char* login);
+
+void foreach (Hash_table* table, void (*func) (Data_set* elem, void* ), void* data);
+void print_elem (Data_set* elem, void* log_file);
 
 #endif

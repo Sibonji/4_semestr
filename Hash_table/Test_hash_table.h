@@ -34,4 +34,6 @@ void free_mem (Test_table* test_table, Hash_table* hash_table, FILE* tests);
 int errors_test ();
 int print_func_test ();
 
+void cmp_elem (Data_set* elem, void* word);
+
 #endif
