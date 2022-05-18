@@ -1,4 +1,5 @@
 CC = gcc -lm -MD -pthread
+CFLAGS = -std=c99 -lm
 
 LIB_SRC  = LIB/lib.c
 LIB_OBJ  = lib.o
@@ -18,8 +19,8 @@ INT_SRC = CLIENT/integral.c
 INT_OBJ = integral.o
 
 all: $(SERVER_OBJ) $(LIB_OBJ) $(ERR_OBJ) $(CLIENT_OBJ)
-	$(CC) $(SERVER_OBJ) $(ERR_OBJ) $(LIB_OBJ) -o $(SERVER_RES)
-	$(CC) $(CLIENT_OBJ) $(ERR_OBJ) $(LIB_OBJ) -o $(CLIENT_RES) -lm
+	$(CC) $(SERVER_OBJ) $(ERR_OBJ) $(LIB_OBJ) -o $(SERVER_RES) $(CFLAGS)
+	$(CC) $(CLIENT_OBJ) $(ERR_OBJ) $(LIB_OBJ) -o $(CLIENT_RES) $(CFLAGS)
 
 #$(INT_OBJ): $(INT_RES)
 #	$(CC) -c $(INT_SRC)
