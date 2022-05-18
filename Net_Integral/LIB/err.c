@@ -9,6 +9,8 @@ const char* get_enum_name (int enum_name) {
         case -bad_bind: return "bad_bind";
         case -bad_listen: return "bad_listen";
         case -bad_send: return "bad_send";
+        case -bad_accept: return "bad_accept";
+        case -bad_connect: return "bad_connect";
         default: return "undef_err_name";
     }
 }

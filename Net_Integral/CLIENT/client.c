@@ -26,7 +26,29 @@ void client_start (int thread_quant) {
 
     int serv_port_num = make_client_connect (&peer_adr, &sender_adr);
 
+    memset (&server_adr, 0, sizeof (server_adr));
+    server_adr.sin_addr = peer_adr.sin_addr;
+    server_adr.sin_port = htons (PORT_NUM);
+    server_adr.sin_family = AF_INET;
 
+    if ((sender_fd = socket (AF_INET, SOCK_STREAM, 0)) < 0)
+        print_error (-bad_socket);
+
+    int pr_cnt = PR_CNT;
+    int pr_idle_time = PR_IDLE_TIME;
+    int pr_btw_time = PR_BTW_TIME;
+
+    if (setsockopt (sender_fd, IPPROTO_TCP, TCP_KEEPCNT, &pr_cnt, sizeof (pr_cnt)) != 0)
+        print_error (-bad_socket);
+    if (setsockopt (sender_fd, IPPROTO_TCP, TCP_KEEPIDLE, &pr_idle_time, sizeof (pr_idle_time)) != 0)
+        print_error (-bad_socket);
+    if (setsockopt (sender_fd, IPPROTO_TCP, TCP_KEEPINTVL, &pr_btw_time, sizeof (pr_btw_time)) != 0)
+        print_error (-bad_socket);
+
+    socklen_t server_adr_size = sizeof (server_adr);
+    if (connect (sender_fd, (struct sockaddr*) &server_adr, server_adr_size) < 0)
+        print_error (-bad_connect);
+    
 }
 
 int make_client_connect (struct sockaddr_in* peer_adr, struct sockaddr_in* sender_adr) {
@@ -49,11 +71,6 @@ int make_client_connect (struct sockaddr_in* peer_adr, struct sockaddr_in* sende
               (struct sockaddr *) peer_adr, &peer_adr_size);
 
     printf ("Server message received!\n");
-
-    int is_work = 0;
-
-    //recvfrom (connect_fd, &is_work, sizeof (serv_port_num), 0,
-      //        (struct sockaddr *) peer_adr, &peer_adr_size);
 
     close (connect_fd); 
 

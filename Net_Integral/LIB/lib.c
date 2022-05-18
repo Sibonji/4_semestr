@@ -27,3 +27,15 @@ void listen_create (int __fd, int __n) {
 
     return;
 }
+
+int accept_client (int fd, struct sockaddr* addr, socklen_t* addr_len) {
+    int ret_num;
+
+    if ((ret_num = accept (fd, addr, addr_len)) < 0) {
+        if (errno == EAGAIN)
+            return -no_clients;
+        else
+            print_error (-bad_accept);
+    }
+    return ret_num;
+}

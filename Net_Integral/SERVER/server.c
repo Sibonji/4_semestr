@@ -70,6 +70,33 @@ void server_start (int pc_quant) {
 
     make_serv_connect ();
 
+    int connect_fds[pc_quant];
+    struct sockaddr_in serv_addrs[pc_quant];
+
+    struct timeval connect_time_wait = {
+        .tv_sec = CONNECT_WAIT_TIME_SEC,
+        .tv_usec = CONNECT_WAIT_TIME_USEC
+    };
+
+    int client_num;
+    for (client_num = 0; client_num < pc_quant; client_num++) {
+        connect_fds[client_num] = accept_client (receiver_fd, NULL, NULL);
+
+        if (connect_fds[client_num] == -no_clients) 
+            break; //send msg to children that programm is finished, write that code
+
+        if (setsockopt (connect_fds[client_num], SOL_SOCKET, SO_RCVTIMEO,
+                        &connect_time_wait, sizeof (connect_time_wait)) != 0)
+            print_error (-bad_socket);
+
+        serv_addrs[client_num].sin_port = htons (CONNECT_PORT_NUM);
+        serv_addrs[client_num].sin_family = AF_INET;
+
+        printf ("Connected!\n");
+    }
+
+
+
     printf ("Programm finished!\n");
 
     return;

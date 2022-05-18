@@ -9,10 +9,14 @@ enum {
     bad_bind,
     bad_listen,
     bad_send,
+    bad_accept,
+    bad_connect,
     undef_err_name,
 
     cont,
-    stop
+    stop,
+
+    no_clients
 };
 
 #endif
