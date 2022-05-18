@@ -27,7 +27,7 @@
 #include <netinet/tcp.h>
 
 #define WAIT_TIME_SEC 0
-#define WAIT_TIME_USEC 1000
+#define WAIT_TIME_USEC 10000
 
 #define CONNECT_WAIT_TIME_SEC 100000
 #define CONNECT_WAIT_TIME_USEC 0
@@ -50,7 +50,7 @@
 int check_args (int argc, char* argv[]);
 
 void server_start (int pc_quant);
-void client_start (int thread_quant);
+void clnt_start (int thread_quant);
 
 const char* get_enum_name (int enum_name);
 void print_error (int err_num);
