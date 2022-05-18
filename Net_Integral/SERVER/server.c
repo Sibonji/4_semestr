@@ -29,8 +29,79 @@ int main (int argc, char* argv[]) {
 
 void server_start (int pc_quant) {
     int one = 1;
-    int receiver = 0;
+    int receiver_fd = 0;
     struct sockaddr_in serv_adr;
+    
+    struct timeval wait_time  = {
+        .tv_sec = WAIT_TIME_SEC,
+        .tv_usec = WAIT_TIME_USEC
+    };
 
-    if ((receiver = socket (AF_INET, SOCK_STREAM, 0) < 0) print_error (-bad_socket);
+    if ((receiver_fd = socket (AF_INET, SOCK_STREAM, 0)) < 0)
+        print_error (-bad_socket);
+
+    if (setsockopt (receiver_fd, SOL_SOCKET, SO_REUSEADDR, &one, sizeof (one)) != 0)
+        print_error (-bad_socket);
+    if (setsockopt (receiver_fd, SOL_SOCKET, SO_RCVTIMEO, &wait_time, sizeof (wait_time)) != 0)
+        print_error (-bad_socket);
+    if (setsockopt (receiver_fd, SOL_SOCKET, SO_KEEPALIVE, &one, sizeof (one)) != 0)
+        print_error (-bad_socket);
+
+    int pr_cnt = PR_CNT;
+    int pr_idle_time = PR_IDLE_TIME;
+    int pr_btw_time = PR_BTW_TIME;
+
+    if (setsockopt (receiver_fd, IPPROTO_TCP, TCP_KEEPCNT, &pr_cnt, sizeof (pr_cnt)) != 0)
+        print_error (-bad_socket);
+    if (setsockopt (receiver_fd, IPPROTO_TCP, TCP_KEEPIDLE, &pr_idle_time, sizeof (pr_idle_time)) != 0)
+        print_error (-bad_socket);
+    if (setsockopt (receiver_fd, IPPROTO_TCP, TCP_KEEPINTVL, &pr_btw_time, sizeof (pr_btw_time)) != 0)
+        print_error (-bad_socket);
+
+    memset (&serv_adr, 0, sizeof (serv_adr));
+    serv_adr.sin_addr.s_addr = htonl (INADDR_ANY);
+    serv_adr.sin_port = htons (PORT_NUM);
+    serv_adr.sin_family = AF_INET;
+
+    if (bind(receiver_fd, (struct sockaddr *) &serv_adr, sizeof (serv_adr)) < 0)
+        print_error (-bad_bind);
+
+    listen_create (receiver_fd, __N);
+
+    make_serv_connect ();
+
+    printf ("Programm finished!\n");
+
+    return;
+}
+
+void make_serv_connect () {
+    int one = 1;
+    
+    struct sockaddr_in connect_adr;
+    int connect_fd;
+    
+    if ((connect_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
+        print_error (-bad_socket);
+
+    if (setsockopt (connect_fd, SOL_SOCKET, SO_BROADCAST, &one, sizeof (one)) < 0)
+        print_error (-bad_socket);
+    if (setsockopt (connect_fd, SOL_SOCKET, SO_REUSEADDR, &one, sizeof (one)) < 0)
+        print_error (-bad_socket);
+
+    memset (&connect_adr, 0, sizeof (connect_adr));
+
+    connect_adr.sin_addr.s_addr = INADDR_BROADCAST;
+    connect_adr.sin_port = htons (CONNECT_PORT_NUM);
+    connect_adr.sin_family = AF_INET;
+
+    if (bind(connect_fd, (struct sockaddr *) &connect_adr, sizeof (connect_adr)) < 0)
+        print_error (-bad_bind);
+
+    int connect_msg = PORT_NUM;
+    if (sizeof (connect_msg) != sendto (connect_fd, &connect_msg, sizeof (connect_msg), 0, 
+                                    (struct sockaddr *) &connect_adr, sizeof (connect_adr)))
+        print_error (-bad_send);
+
+    close (connect_fd);
 }

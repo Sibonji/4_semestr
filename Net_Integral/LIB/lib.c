@@ -16,3 +16,14 @@ int check_args (int argc, char* argv[]) {
 
     return biggest;
 }
+
+void listen_create (int __fd, int __n) {
+    char* name;
+    if ((name = getenv ("LISTENQ")) != NULL)
+        __n = atoi (name);
+
+    if (listen (__fd, __n) < 0)
+        print_error (-bad_listen);
+
+    return;
+}

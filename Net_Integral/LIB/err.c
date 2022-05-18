@@ -6,7 +6,10 @@ const char* get_enum_name (int enum_name) {
         case success: return "success";
         case -incorrect_args: return "incorrect_args";
         case -bad_socket: return "bad_socket";
-        case default: return "undef_err_name";
+        case -bad_bind: return "bad_bind";
+        case -bad_listen: return "bad_listen";
+        case -bad_send: return "bad_send";
+        default: return "undef_err_name";
     }
 }
 
