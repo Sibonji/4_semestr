@@ -16,6 +16,8 @@ const char* get_enum_name (int enum_name) {
 }
 
 void print_error (int err_num) {
+    if (err_num == ok) return;
+    
     fprintf (stderr, "Error received during programm work\n"
                      "Error name: %s, error num: %d\n", get_enum_name (err_num), err_num);
 

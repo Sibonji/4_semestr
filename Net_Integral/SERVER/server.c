@@ -129,9 +129,55 @@ void server_start (int pc_quant) {
         all_thread_quant += thread_num;
     }
 
+    printf ("Received thread quantity!\n");
+
     //printf ("All_thread_quant: %d\n", all_thread_quant);
 
-    
+    double last_end = 0;
+    socklen_t adr_size = sizeof (serv_addrs[0]);
+
+    for (int i = 0; i < conn_pc_quant; i++) {
+        double length = (double) (CALC_RANGE * thread_per_client[i] / all_thread_quant);
+
+        Limits int_limits;
+        int_limits.down = last_end;
+        int_limits.up = last_end + length;
+        last_end = int_limits.up;
+
+        if (sendto (connect_fds[i], &int_limits, sizeof (int_limits), 0,
+                    (struct sockaddr*)(&serv_addrs[i]), adr_size) < 0)
+            print_error (-bad_send);
+    }
+
+    printf ("Sended limits to clients!\n");
+
+    double final_sum = 0;
+
+    for (int i = 0; i < conn_pc_quant; i++) {
+        double res = 0;
+
+        ssize_t recv_value = 0;
+        if ((recv_value = recv (connect_fds[i], &res, sizeof (res), 0)) < 0)
+            print_error (-bad_recv);
+
+        if (recv_value != sizeof (res)) {
+            fprintf (stderr, "Client not responding!\n");
+            for (int i = 0; i < conn_pc_quant; i++)
+                close (connect_fds[i]);
+
+            close (receiver_fd);
+
+            return;
+        }
+
+        printf ("Received info from client[%d]!\n", i);
+
+        final_sum += res;
+
+        close (connect_fds[i]);
+    }
+
+    printf ("Res is: %lf\n", final_sum);
 
     printf ("Programm finished!\n");
 

@@ -1,4 +1,4 @@
-CC = gcc
+CC = gcc -lm -MD -pthread
 
 LIB_SRC  = LIB/lib.c
 LIB_OBJ  = lib.o
@@ -14,9 +14,15 @@ CLIENT_RES = client
 ERR_SRC = LIB/err.c
 ERR_OBJ = err.o
 
+INT_SRC = CLIENT/integral.c
+INT_OBJ = integral.o
+
 all: $(SERVER_OBJ) $(LIB_OBJ) $(ERR_OBJ) $(CLIENT_OBJ)
 	$(CC) $(SERVER_OBJ) $(ERR_OBJ) $(LIB_OBJ) -o $(SERVER_RES)
-	$(CC) $(CLIENT_OBJ) $(ERR_OBJ) $(LIB_OBJ) -o $(CLIENT_RES)
+	$(CC) $(CLIENT_OBJ) $(ERR_OBJ) $(LIB_OBJ) -o $(CLIENT_RES) -lm
+
+#$(INT_OBJ): $(INT_RES)
+#	$(CC) -c $(INT_SRC)
 
 serverex: $(SERVER_OBJ) $(LIB_OBJ) $(ERR_OBJ)
 	$(CC) $(SERVER_OBJ) $(ERR_OBJ) $(LIB_OBJ) -o $(SERVER_RES)

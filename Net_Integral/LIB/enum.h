@@ -17,6 +17,13 @@ enum {
     cont,
     stop,
 
+    ok,
+
+    bad_alloc,
+    bad_cr_thread,
+    bad_set,
+    bad_join,
+
     no_clients
 };
 
