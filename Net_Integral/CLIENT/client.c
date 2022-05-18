@@ -48,7 +48,9 @@ void client_start (int thread_quant) {
     socklen_t server_adr_size = sizeof (server_adr);
     if (connect (sender_fd, (struct sockaddr*) &server_adr, server_adr_size) < 0)
         print_error (-bad_connect);
-    
+
+    if (send (sender_fd, &thread_quant, sizeof (thread_quant), MSG_NOSIGNAL) != sizeof (thread_quant))
+        print_error (-bad_send);
 }
 
 int make_client_connect (struct sockaddr_in* peer_adr, struct sockaddr_in* sender_adr) {

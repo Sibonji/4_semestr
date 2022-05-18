@@ -23,6 +23,7 @@
 
 #include    <sys/time.h>
 #include    <math.h>
+#include    <sys/sysinfo.h>
 
 #include    <netinet/tcp.h>
 

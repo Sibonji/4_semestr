@@ -95,7 +95,43 @@ void server_start (int pc_quant) {
         printf ("Connected!\n");
     }
 
+    int conn_pc_quant = client_num;
+    if (conn_pc_quant == 0) {
+        fprintf (stderr, "Clients not found, finish programm!\n");
+        close (receiver_fd);
+        return;
+    }
+    else if (conn_pc_quant != pc_quant) {
+        fprintf (stdout, "You wanted to run %d clients, but only %d is running!\n"
+                         "Integrall will count only on %d clients!\n", pc_quant, conn_pc_quant, conn_pc_quant);
+    }
 
+    int all_thread_quant = 0;
+    int thread_per_client[conn_pc_quant];
+    for (client_num = 0; client_num < conn_pc_quant; client_num++) {
+        int thread_num = 0;
+        
+        ssize_t recv_value = 0;
+        if ((recv_value = recv (connect_fds[client_num], &thread_num, sizeof (thread_num), 0)) < 0)
+            print_error (-bad_recv);
+
+        if (recv_value != sizeof (thread_num)) {
+            fprintf (stderr, "Client not responding!\n");
+            for (int i = 0; i < conn_pc_quant; i++)
+                close (connect_fds[i]);
+
+            close (receiver_fd);
+
+            return;
+        }
+
+        thread_per_client[client_num] = thread_num;
+        all_thread_quant += thread_num;
+    }
+
+    //printf ("All_thread_quant: %d\n", all_thread_quant);
+
+    
 
     printf ("Programm finished!\n");
 

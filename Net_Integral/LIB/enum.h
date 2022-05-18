@@ -11,6 +11,7 @@ enum {
     bad_send,
     bad_accept,
     bad_connect,
+    bad_recv,
     undef_err_name,
 
     cont,
