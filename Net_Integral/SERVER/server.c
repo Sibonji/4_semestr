@@ -107,6 +107,8 @@ void server_start (int pc_quant) {
     }
 
     int all_thread_quant = 0;
+    int i = 0;
+
     int thread_per_client[conn_pc_quant];
     for (client_num = 0; client_num < conn_pc_quant; client_num++) {
         int thread_num = 0;
@@ -117,7 +119,7 @@ void server_start (int pc_quant) {
 
         if (recv_value != sizeof (thread_num)) {
             fprintf (stderr, "Client not responding!\n");
-            for (int i = 0; i < conn_pc_quant; i++)
+            for (i = 0; i < conn_pc_quant; i++)
                 close (connect_fds[i]);
 
             close (receiver_fd);
@@ -136,7 +138,7 @@ void server_start (int pc_quant) {
     double last_end = 0;
     socklen_t adr_size = sizeof (serv_addrs[0]);
 
-    for (int i = 0; i < conn_pc_quant; i++) {
+    for (i = 0; i < conn_pc_quant; i++) {
         double length = (double) (CALC_RANGE * thread_per_client[i] / all_thread_quant);
 
         Limits int_limits;
@@ -153,7 +155,7 @@ void server_start (int pc_quant) {
 
     double final_sum = 0;
 
-    for (int i = 0; i < conn_pc_quant; i++) {
+    for (i = 0; i < conn_pc_quant; i++) {
         double res = 0;
 
         ssize_t recv_value = 0;
@@ -162,7 +164,7 @@ void server_start (int pc_quant) {
 
         if (recv_value != sizeof (res)) {
             fprintf (stderr, "Client not responding!\n");
-            for (int i = 0; i < conn_pc_quant; i++)
+            for (i = 0; i < conn_pc_quant; i++)
                 close (connect_fds[i]);
 
             close (receiver_fd);
