@@ -25,6 +25,8 @@ void client_start (int thread_quant) {
     sender_adr.sin_family = AF_INET;
 
     int serv_port_num = make_client_connect (&peer_adr, &sender_adr);
+
+
 }
 
 int make_client_connect (struct sockaddr_in* peer_adr, struct sockaddr_in* sender_adr) {
@@ -48,9 +50,14 @@ int make_client_connect (struct sockaddr_in* peer_adr, struct sockaddr_in* sende
 
     printf ("Server message received!\n");
 
+    int is_work = 0;
+
+    //recvfrom (connect_fd, &is_work, sizeof (serv_port_num), 0,
+      //        (struct sockaddr *) peer_adr, &peer_adr_size);
+
     close (connect_fd); 
 
-    printf ("Port num is: %d\n", serv_port_num);       
+    //printf ("Port num is: %d\n", serv_port_num);       
 
     return serv_port_num;
 }

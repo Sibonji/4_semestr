@@ -9,7 +9,10 @@ enum {
     bad_bind,
     bad_listen,
     bad_send,
-    undef_err_name
+    undef_err_name,
+
+    cont,
+    stop
 };
 
 #endif
