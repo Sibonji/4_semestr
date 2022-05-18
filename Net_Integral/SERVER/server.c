@@ -28,5 +28,9 @@ int main (int argc, char* argv[]) {
 }
 
 void server_start (int pc_quant) {
+    int one = 1;
+    int receiver = 0;
+    struct sockaddr_in serv_adr;
 
+    if ((receiver = socket (AF_INET, SOCK_STREAM, 0) < 0) print_error (-bad_socket);
 }

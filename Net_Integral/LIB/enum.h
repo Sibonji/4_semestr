@@ -3,7 +3,10 @@
 
 enum {
     success,
-    incorrect_args
+    
+    incorrect_args,
+    bad_socket,
+    undef_err_name
 };
 
 #endif
