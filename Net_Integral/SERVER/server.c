@@ -79,7 +79,6 @@ void server_start (int pc_quant) {
     };
 
     int client_num;
-    printf ("Check!\n");
     for (client_num = 0; client_num < pc_quant; client_num++) {
         connect_fds[client_num] = accept_client (receiver_fd, NULL, NULL);
 
