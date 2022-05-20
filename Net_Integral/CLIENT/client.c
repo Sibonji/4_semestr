@@ -113,7 +113,8 @@ int empty_threads_create (int empty_threads_quant, pthread_t** empty_thread, int
     Thread_info* empty_threads_info = (Thread_info*) calloc (empty_threads_quant, sizeof (Thread_info));
     if (empty_threads_info == NULL) return -bad_alloc;
 
-    for (int i = 0; i < empty_threads_quant; i++) {
+    int i = 0;
+    for (i = 0; i < empty_threads_quant; i++) {
         empty_threads_info[i].lim_inf = 0;
         empty_threads_info[i].lim_sup = range / threads_quant;
         empty_threads_info[i].thread_num = i;
