@@ -50,7 +50,7 @@
 int check_args (int argc, char* argv[]);
 
 void server_start (int pc_quant);
-void clnt_start (int thread_quant);
+void client_start (int thread_quant);
 
 const char* get_enum_name (int enum_name);
 void print_error (int err_num);

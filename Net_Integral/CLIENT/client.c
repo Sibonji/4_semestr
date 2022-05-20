@@ -10,7 +10,8 @@ int main (int argc, char* argv[]) {
     if (thread_quant < 0)
         fprintf (stderr, "Incorrect command line arguments!\n");
     else
-        client_start (thread_quant);
+        while(1)
+            client_start (thread_quant);
 
     return 0;
 }
@@ -29,6 +30,8 @@ void client_start (int thread_quant) {
     sender_adr.sin_family = AF_INET;
 
     int serv_port_num = make_client_connect (&peer_adr, &sender_adr);
+    if (serv_port_num != PORT_NUM)
+        print_error (-bad_connect);
 
     memset (&server_adr, 0, sizeof (server_adr));
     server_adr.sin_addr = peer_adr.sin_addr;
@@ -145,7 +148,8 @@ int create_threads (int thread_quant, pthread_t* thread, Thread_info* threads_in
     int empty_threads_quant = empty_threads_create (CPU_quant - thread_quant, &empty_threads, thread_quant, range);
     if (empty_threads < 0) return empty_threads_quant;
 
-    for (int i = 0; i < thread_quant; i++) {
+    int i = 0;
+    for (i = 0; i < thread_quant; i++) {
         threads_info[i].lim_inf = i * (range / thread_quant);
         threads_info[i].lim_sup = threads_info[i].lim_inf + range / thread_quant;
         threads_info[i].thread_num = (empty_threads_quant + i) % CPU_quant;
@@ -153,7 +157,7 @@ int create_threads (int thread_quant, pthread_t* thread, Thread_info* threads_in
         if (pthread_create (thread + i, NULL, start_thread, threads_info + i) != 0) return -bad_cr_thread;
     }
 
-    for (int i = 0; i < empty_threads_quant; i++) {
+    for (i = 0; i < empty_threads_quant; i++) {
         if (pthread_join (empty_threads[i], NULL) != 0) return -bad_join;
     }
 
@@ -164,7 +168,8 @@ int create_threads (int thread_quant, pthread_t* thread, Thread_info* threads_in
 double count_res (int threads_quant, pthread_t* thread, Thread_info* threads_info) {
     double res = 0;
 
-    for (int i = 0; i < threads_quant; i++) {
+    int i = 0;
+    for (i = 0; i < threads_quant; i++) {
         if (pthread_join (thread[i], NULL) != 0) return -bad_join;
 
         res += threads_info[i].res[0];
@@ -175,8 +180,9 @@ double count_res (int threads_quant, pthread_t* thread, Thread_info* threads_inf
 
 double count_int (Thread_info* thread_info) {
     double res = 0;
+    double i = 0;
 
-    for (double i = thread_info -> lim_inf; i < thread_info -> lim_sup; i += DELTA) {
+    for (i = thread_info -> lim_inf; i < thread_info -> lim_sup; i += DELTA) {
         res += count_func (i) * DELTA;
     }
 

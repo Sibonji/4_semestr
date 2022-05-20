@@ -1,5 +1,5 @@
-CC = gcc -lm -MD -pthread
-CFLAGS = -std=c99 -lm
+CC = gcc -lm -MD -pthread -Wall
+CFLAGS = -lm
 
 LIB_SRC  = LIB/lib.c
 LIB_OBJ  = lib.o
