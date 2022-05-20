@@ -26,11 +26,11 @@
 
 #include <netinet/tcp.h>
 
-#define WAIT_TIME_SEC 0
+#define WAIT_TIME_SEC 1
 #define WAIT_TIME_USEC 10000
 
 #define CONNECT_WAIT_TIME_SEC 100000
-#define CONNECT_WAIT_TIME_USEC 0
+#define CONNECT_WAIT_TIME_USEC 1
 
 #define PR_CNT 5
 #define PR_IDLE_TIME 2
